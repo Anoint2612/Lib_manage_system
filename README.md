@@ -1,25 +1,42 @@
 # Library Management System
 
-A simple library management system written in Python, designed to manage books, users, and their borrowing activities. It includes functionalities to add, remove, and search for books, as well as manage user registrations, borrowing, and returning of books. The system stores data in JSON files for books and users.
+A comprehensive library management system written in Python, designed to streamline the management of books, users, and their borrowing activities. The system leverages JSON files to store data for books and users, ensuring simplicity and ease of data access.
+
+---
 
 ## Features
 
-- **Book Management**:
-  - Add new books to the library.
-  - Remove books from the library.
-  - Update book details (e.g., quantity, title, author).
-  - Search books by title, author, or ISBN.
+### Book Management
+- **Add New Books**: Seamlessly add new books to the library’s collection.
+- **Remove Books**: Easily remove books no longer available or relevant.
+- **Update Book Details**: Modify book details such as quantity, title, or author.
+- **Search Books**: Locate books quickly by title, author, or ISBN.
 
-- **User Management**:
-  - Register new users.
-  - Borrow books from the library.
-  - Return borrowed books.
-  - List borrowed books for each user.
+### User Management
+- **Register New Users**: Facilitate easy user registration to maintain user records.
+- **Borrow Books**: Allow users to borrow books from the library’s collection.
+- **Return Books**: Track and manage the return of borrowed books.
+- **List Borrowed Books**: View a detailed list of books borrowed by each user.
 
-- **Overdue Notifications**:
-  - Track overdue books and notify users if they have overdue books.
+### Overdue Notifications
+- **Track Overdue Books**: Monitor borrowed books and identify overdue returns.
+- **Notify Users**: Alert users with notifications about overdue books, ensuring timely returns.
+
+---
 
 ## File Structure
 
-- `books.json` - Stores book data (title, author, ISBN, quantity).
-- `users.json` - Stores user data (user ID, name, borrowed books).
+- `books.json`: Stores all book-related data including:
+  - Title
+  - Author
+  - ISBN
+  - Quantity
+
+- `users.json`: Stores all user-related data including:
+  - User ID
+  - Name
+  - Borrowed Books
+
+---
+
+This system provides an efficient and user-friendly solution for managing libraries, ensuring organized operations and seamless book and user management.
