@@ -11,7 +11,7 @@ class LibraryManagementSystem:
         self.root.geometry("800x900")
         self.root.configure(bg="#f0f2f5")
         
-        # MongoDB setup
+        # MongoDB setup connected to cluster
         self.client = MongoClient("mongodb://localhost:27017/")
         self.db = self.client["library_db"]
         self.books_collection = self.db["books"]
