@@ -8,14 +8,16 @@ from pymongo import MongoClient
 
 
 class LibraryManagementSystem:
-    #this is a comit for contructor
+    # Constructor: Initializes the application, sets up MongoDB connections, and builds the GUI layout.
+
     def _init_(self, root):
         self.root = root
         self.root.title("Library Management System")
         self.root.geometry("800x900")
         self.root.configure(bg="#f0f2f5")
         
-        # MongoDB setup connected to cluster
+        # Connect to MongoDB and initialize collections for books, users, and borrowed books.
+
         self.client = MongoClient("mongodb://localhost:27017/")
         self.db = self.client["library_db"]
         self.books_collection = self.db["books"]
