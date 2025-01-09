@@ -16,7 +16,11 @@ class LibraryManagementSystem:
         self.root.geometry("800x900")
         self.root.configure(bg="#f0f2f5")
         
-        # Connect to MongoDB and initialize collections for books, users, and borrowed books.
+        # Library Management System
+        # This module handles user interactions, book inventory management, and transactions.
+        # Book: [Your Book]
+        # User: [User]
+
 
         self.client = MongoClient("mongodb://localhost:27017/")
         self.db = self.client["library_db"]
