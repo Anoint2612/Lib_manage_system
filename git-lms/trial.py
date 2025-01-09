@@ -322,6 +322,7 @@ class LibraryManagementSystem:
                 ))
         else:
             messagebox.showwarning("Warning", "Please enter a search term.")
+# Displays all registered users along with their borrowed book details in the User Records tab.
 
     def view_user_records(self):
         # Clear existing items in treeview
