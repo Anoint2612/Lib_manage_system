@@ -351,6 +351,8 @@ class LibraryManagementSystem:
                 status
             ))
 #main 
+# Entry point: Creates the main application window and starts the Tkinter event loop.
+
 if _name_ == "_main_":
     root = tk.Tk()
     app = LibraryManagementSystem(root)
