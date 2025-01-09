@@ -82,6 +82,7 @@ class LibraryManagementSystem:
             padding=10,
             fieldbackground="white"
         )
+# Creates the application header and adds it to the main container.
 
     def create_header(self):
         header = ttk.Label(
@@ -90,6 +91,7 @@ class LibraryManagementSystem:
             style="Header.TLabel"
         )
         header.grid(row=0, column=0, pady=(0, 20), sticky="ew")
+# Creates and organizes the tabbed interface for Books Management, Circulation, Search, and User Records.
 
     def create_tabs(self):
         self.notebook = ttk.Notebook(self.main_container, style="Tab.TNotebook")
@@ -106,6 +108,7 @@ class LibraryManagementSystem:
         self.notebook.add(self.circulation_tab, text="Circulation")
         self.notebook.add(self.search_tab, text="Search")
         self.notebook.add(self.users_tab, text="User Records")
+# Builds the Books Management tab with fields to add a new book to the library database.
 
     def create_books_tab(self):
         tab = ttk.Frame(self.notebook, style="Card.TFrame", padding=20)
@@ -129,6 +132,7 @@ class LibraryManagementSystem:
         ).grid(row=4, column=0, columnspan=2, pady=20)
         
         return tab
+# Builds the Circulation tab to allow borrowing and returning of books by users.
 
     def create_circulation_tab(self):
         tab = ttk.Frame(self.notebook, style="Card.TFrame", padding=20)
@@ -166,6 +170,7 @@ class LibraryManagementSystem:
         ).grid(row=6, column=0, columnspan=2, pady=20)
         
         return tab
+# Builds the Search tab for finding books by title, author, or ISBN.
 
     def create_search_tab(self):
         tab = ttk.Frame(self.notebook, style="Card.TFrame", padding=20)
@@ -193,6 +198,7 @@ class LibraryManagementSystem:
             self.search_results.column(col, width=150)
         
         return tab
+# Builds the User Records tab to display details of all registered users and their borrowed books.
 
     def create_users_tab(self):
         tab = ttk.Frame(self.notebook, style="Card.TFrame", padding=20)
