@@ -224,6 +224,8 @@ class LibraryManagementSystem:
         return tab
 
     # Core functionality methods
+    # Adds a new book to the library database by inserting its details into the MongoDB books collection.
+
     def add_book(self):
         title = self.book_title_entry.get()
         author = self.book_author_entry.get()
@@ -246,6 +248,7 @@ class LibraryManagementSystem:
             self.book_isbn_entry.delete(0, tk.END)
         else:
             messagebox.showerror("Error", "Please fill in all fields.")
+# Allows a user to borrow a book by marking it as unavailable in the database and creating a borrowing record.
 
     def borrow_book(self):
         user_id = self.user_id_entry.get()
