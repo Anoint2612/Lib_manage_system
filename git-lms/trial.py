@@ -41,6 +41,8 @@ class LibraryManagementSystem:
         # Create tabbed interface
         self.create_tabs()
 
+    # Configures the visual styles for various UI elements such as labels, buttons, and frames.
+
     def setup_styles(self):
         self.style = ttk.Style()
         
