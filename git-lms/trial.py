@@ -275,6 +275,7 @@ class LibraryManagementSystem:
                 messagebox.showerror("Error", "Book not available or not found.")
         else:
             messagebox.showerror("Error", "Please fill in all fields.")
+# Allows a user to return a borrowed book by marking it as available in the database and removing the borrowing record.
 
     def return_book(self):
         isbn = self.book_isbn_return_entry.get()
@@ -293,6 +294,7 @@ class LibraryManagementSystem:
                 messagebox.showerror("Error", "Book not found.")
         else:
             messagebox.showerror("Error", "Please enter a book ISBN.")
+# Searches for books in the library database based on a search term and displays the results in a table.
 
     def search_book(self):
         search_term = self.search_book_entry.get().lower()
