@@ -3,6 +3,10 @@ from tkinter import messagebox, ttk
 from datetime import datetime, timedelta
 from pymongo import MongoClient
 
+# This class implements a Library Management System with a GUI built using Tkinter.
+# It provides features for managing books, users, and borrowing activities while storing data in MongoDB.
+
+
 class LibraryManagementSystem:
     #this is a comit for contructor
     def _init_(self, root):
