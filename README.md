@@ -26,17 +26,14 @@ A comprehensive library management system written in Python, designed to streaml
 
 ## File Structure
 
-- `books.json`: Stores all book-related data including:
-  - Title
-  - Author
-  - ISBN
-  - Quantity
+### Example: `books.json`
+```json
+[
+  {
+    "title": "The Great Gatsby",
+    "author": "F. Scott Fitzgerald",
+    "isbn": "9780743273565",
+    "quantity": 5
+  }
+]
 
-- `users.json`: Stores all user-related data including:
-  - User ID
-  - Name
-  - Borrowed Books
-
----
-
-This system provides an efficient and user-friendly solution for managing libraries, ensuring organized operations and seamless book and user management.
