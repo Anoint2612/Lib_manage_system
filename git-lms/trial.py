@@ -3,90 +3,114 @@ from tkinter import messagebox, ttk
 from datetime import datetime, timedelta
 from pymongo import MongoClient
 
-# This class implements a Library Management System with a GUI built using Tkinter.
-# It provides features for managing books, users, and borrowing activities while storing data in MongoDB.
-
-
 class LibraryManagementSystem:
-    # Constructor: Initializes the application, sets up MongoDB connections, and builds the GUI layout.
-
-    def _init_(self, root):
+    def __init__(self, root):
         self.root = root
         self.root.title("Library Management System")
-        self.root.geometry("800x900")
-        self.root.configure(bg="#f0f2f5")
-        
-        # Library Management System
-        # This module handles user interactions, book inventory management, and transactions.
-        # Book: [Your Book]
-        # User: [User]
+        self.root.geometry("1024x768")
+        self.root.configure(bg="#ffffff")
 
-
+        # MongoDB setup remains the same
         self.client = MongoClient("mongodb://localhost:27017/")
         self.db = self.client["library_db"]
         self.books_collection = self.db["books"]
         self.users_collection = self.db["users"]
         self.borrowed_books_collection = self.db["borrowed_books"]
         
-        # Configure styles
+        # Configure modern styles
         self.setup_styles()
         
-        # Create main container
-        self.main_container = ttk.Frame(self.root, padding="20")
+        # Create main container with padding
+        self.main_container = ttk.Frame(self.root, padding="30")
         self.main_container.grid(row=0, column=0, sticky="nsew")
         
-        # Configure grid weights
+        # Configure grid weights for responsiveness
         self.root.grid_rowconfigure(0, weight=1)
         self.root.grid_columnconfigure(0, weight=1)
+        self.main_container.grid_columnconfigure(0, weight=1)
         
-        # Create header
+        # Create header and tabs
         self.create_header()
-        
-        # Create tabbed interface
         self.create_tabs()
-
-    # Configures the visual styles for various UI elements such as labels, buttons, and frames.
 
     def setup_styles(self):
         self.style = ttk.Style()
         
-        # Configure colors
+        # Modern color palette
+        self.colors = {
+            'primary': '#2563eb',      # Blue
+            'secondary': '#64748b',    # Slate
+            'success': '#22c55e',      # Green
+            'background': '#ffffff',   # White
+            'surface': '#f8fafc',      # Light gray
+            'text': '#1e293b',         # Dark slate
+            'border': '#e2e8f0'        # Light border
+        }
+        
+        # Configure general style
         self.style.configure(".",
-            background="#f0f2f5",
-            foreground="#1a1a1a",
-            font=("Helvetica", 10)
+            background=self.colors['background'],
+            foreground=self.colors['text'],
+            font=("Inter", 10)
         )
         
-        # Header style
+        # Modern header style
         self.style.configure("Header.TLabel",
-            font=("Helvetica", 24, "bold"),
+            font=("Inter", 28, "bold"),
             padding=20,
-            foreground="#2c3e50"
+            foreground=self.colors['primary']
         )
         
-        # Frame style
+        # Card style frame
         self.style.configure("Card.TFrame",
-            background="white",
-            relief="flat"
+            background=self.colors['surface'],
+            relief="flat",
+            borderwidth=1
         )
         
-        # Button styles
+        # Modern button style
         self.style.configure("Primary.TButton",
-            padding=(20, 10),
-            font=("Helvetica", 10, "bold")
+            padding=(20, 12),
+            font=("Inter", 10, "bold"),
+            background=self.colors['primary'],
+            foreground="white"
         )
         
-        self.style.configure("Tab.TNotebook",
-            padding=10,
-            tabposition="n"
-        )
-        
-        # Entry style
+        # Modern entry style
         self.style.configure("Custom.TEntry",
-            padding=10,
-            fieldbackground="white"
+            padding=12,
+            fieldbackground=self.colors['background'],
+            borderwidth=1,
+            relief="solid"
         )
-# Creates the application header and adds it to the main container.
+        
+        # Notebook (tabs) style
+        self.style.configure("Custom.TNotebook",
+            background=self.colors['background'],
+            padding=10,
+            tabmargins=[2, 5, 2, 0]
+        )
+        
+        self.style.configure("Custom.TNotebook.Tab",
+            padding=[15, 8],
+            font=("Inter", 10),
+            background=self.colors['surface'],
+            foreground=self.colors['text']
+        )
+        
+        # Treeview style
+        self.style.configure("Treeview",
+            background=self.colors['background'],
+            fieldbackground=self.colors['background'],
+            font=("Inter", 10),
+            rowheight=40
+        )
+        
+        self.style.configure("Treeview.Heading",
+            font=("Inter", 10, "bold"),
+            background=self.colors['surface'],
+            padding=10
+        )
 
     def create_header(self):
         header = ttk.Label(
@@ -95,140 +119,203 @@ class LibraryManagementSystem:
             style="Header.TLabel"
         )
         header.grid(row=0, column=0, pady=(0, 20), sticky="ew")
-# Creates and organizes the tabbed interface for Books Management, Circulation, Search, and User Records.
 
     def create_tabs(self):
-        self.notebook = ttk.Notebook(self.main_container, style="Tab.TNotebook")
-        self.notebook.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
+        self.notebook = ttk.Notebook(self.main_container, style="Custom.TNotebook")
+        self.notebook.grid(row=1, column=0, sticky="nsew")
         
-        # Create tabs
+        # Create and add tabs
         self.books_tab = self.create_books_tab()
         self.circulation_tab = self.create_circulation_tab()
         self.search_tab = self.create_search_tab()
         self.users_tab = self.create_users_tab()
         
-        # Add tabs to notebook
-        self.notebook.add(self.books_tab, text="Books Management")
-        self.notebook.add(self.circulation_tab, text="Circulation")
-        self.notebook.add(self.search_tab, text="Search")
-        self.notebook.add(self.users_tab, text="User Records")
-# Builds the Books Management tab with fields to add a new book to the library database.
+        self.notebook.add(self.books_tab, text="📚 Books")
+        self.notebook.add(self.circulation_tab, text="🔄 Circulation")
+        self.notebook.add(self.search_tab, text="🔍 Search")
+        self.notebook.add(self.users_tab, text="👥 Users")
 
     def create_books_tab(self):
-        tab = ttk.Frame(self.notebook, style="Card.TFrame", padding=20)
+        tab = ttk.Frame(self.notebook, style="Card.TFrame", padding=30)
+        tab.grid_columnconfigure(1, weight=1)
         
-        # Add Book Form
-        ttk.Label(tab, text="Add New Book", font=("Helvetica", 16, "bold")).grid(row=0, column=0, pady=(0, 20), sticky="w")
+        # Section title with icon
+        title_frame = ttk.Frame(tab)
+        title_frame.grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 30))
         
-        fields = [("Book Title:", "book_title"), ("Author Name:", "book_author"), ("ISBN:", "book_isbn")]
+        ttk.Label(
+            title_frame,
+            text="Add New Book",
+            font=("Inter", 18, "bold"),
+            foreground=self.colors['primary']
+        ).grid(row=0, column=0, sticky="w")
+        
+        # Form fields
+        fields = [
+            ("📖 Book Title:", "book_title"),
+            ("✍ Author Name:", "book_author"),
+            ("🏷 ISBN:", "book_isbn")
+        ]
         
         for i, (label, attr) in enumerate(fields):
-            ttk.Label(tab, text=label).grid(row=i+1, column=0, pady=5, sticky="w")
-            entry = ttk.Entry(tab, width=40, style="Custom.TEntry")
-            entry.grid(row=i+1, column=1, pady=5, padx=10, sticky="ew")
+            ttk.Label(
+                tab,
+                text=label,
+                font=("Inter", 10)
+            ).grid(row=i+1, column=0, pady=12, padx=(0, 15), sticky="w")
+            
+            entry = ttk.Entry(
+                tab,
+                width=40,
+                style="Custom.TEntry"
+            )
+            entry.grid(row=i+1, column=1, pady=12, sticky="ew")
             setattr(self, f"{attr}_entry", entry)
         
+        # Add book button
+        button_frame = ttk.Frame(tab)
+        button_frame.grid(row=len(fields)+1, column=0, columnspan=2, pady=30)
+        
         ttk.Button(
-            tab,
+            button_frame,
             text="Add Book",
             style="Primary.TButton",
             command=self.add_book
-        ).grid(row=4, column=0, columnspan=2, pady=20)
+        ).grid(row=0, column=0)
         
         return tab
-# Builds the Circulation tab to allow borrowing and returning of books by users.
 
     def create_circulation_tab(self):
-        tab = ttk.Frame(self.notebook, style="Card.TFrame", padding=20)
+        tab = ttk.Frame(self.notebook, style="Card.TFrame", padding=30)
+        tab.grid_columnconfigure(1, weight=1)
         
         # Borrow Section
-        ttk.Label(tab, text="Borrow Book", font=("Helvetica", 16, "bold")).grid(row=0, column=0, columnspan=2, pady=(0, 20), sticky="w")
+        ttk.Label(
+            tab,
+            text="Borrow Book",
+            font=("Inter", 18, "bold"),
+            foreground=self.colors['primary']
+        ).grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 30))
         
-        ttk.Label(tab, text="User ID:").grid(row=1, column=0, pady=5, sticky="w")
+        # Borrow form fields
+        ttk.Label(tab, text="👤 User ID:").grid(row=1, column=0, pady=12, padx=(0, 15), sticky="w")
         self.user_id_entry = ttk.Entry(tab, width=40, style="Custom.TEntry")
-        self.user_id_entry.grid(row=1, column=1, pady=5, padx=10, sticky="ew")
+        self.user_id_entry.grid(row=1, column=1, pady=12, sticky="ew")
         
-        ttk.Label(tab, text="Book ISBN:").grid(row=2, column=0, pady=5, sticky="w")
+        ttk.Label(tab, text="📚 Book ISBN:").grid(row=2, column=0, pady=12, padx=(0, 15), sticky="w")
         self.book_isbn_borrow_entry = ttk.Entry(tab, width=40, style="Custom.TEntry")
-        self.book_isbn_borrow_entry.grid(row=2, column=1, pady=5, padx=10, sticky="ew")
+        self.book_isbn_borrow_entry.grid(row=2, column=1, pady=12, sticky="ew")
         
         ttk.Button(
             tab,
             text="Borrow Book",
             style="Primary.TButton",
             command=self.borrow_book
-        ).grid(row=3, column=0, columnspan=2, pady=20)
+        ).grid(row=3, column=0, columnspan=2, pady=30)
         
         # Return Section
-        ttk.Label(tab, text="Return Book", font=("Helvetica", 16, "bold")).grid(row=4, column=0, columnspan=2, pady=(20, 20), sticky="w")
+        ttk.Label(
+            tab,
+            text="Return Book",
+            font=("Inter", 18, "bold"),
+            foreground=self.colors['primary']
+        ).grid(row=4, column=0, columnspan=2, sticky="w", pady=(30, 30))
         
-        ttk.Label(tab, text="Book ISBN:").grid(row=5, column=0, pady=5, sticky="w")
+        ttk.Label(tab, text="📚 Book ISBN:").grid(row=5, column=0, pady=12, padx=(0, 15), sticky="w")
         self.book_isbn_return_entry = ttk.Entry(tab, width=40, style="Custom.TEntry")
-        self.book_isbn_return_entry.grid(row=5, column=1, pady=5, padx=10, sticky="ew")
+        self.book_isbn_return_entry.grid(row=5, column=1, pady=12, sticky="ew")
         
         ttk.Button(
             tab,
             text="Return Book",
             style="Primary.TButton",
             command=self.return_book
-        ).grid(row=6, column=0, columnspan=2, pady=20)
+        ).grid(row=6, column=0, columnspan=2, pady=30)
         
         return tab
-# Builds the Search tab for finding books by title, author, or ISBN.
 
     def create_search_tab(self):
-        tab = ttk.Frame(self.notebook, style="Card.TFrame", padding=20)
+        tab = ttk.Frame(self.notebook, style="Card.TFrame", padding=30)
+        tab.grid_columnconfigure(1, weight=1)
         
-        ttk.Label(tab, text="Search Books", font=("Helvetica", 16, "bold")).grid(row=0, column=0, columnspan=2, pady=(0, 20), sticky="w")
+        # Search section title
+        ttk.Label(
+            tab,
+            text="Search Books",
+            font=("Inter", 18, "bold"),
+            foreground=self.colors['primary']
+        ).grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 30))
         
-        ttk.Label(tab, text="Search Term:").grid(row=1, column=0, pady=5, sticky="w")
+        # Search field
+        ttk.Label(tab, text="🔍 Search:").grid(row=1, column=0, pady=12, padx=(0, 15), sticky="w")
         self.search_book_entry = ttk.Entry(tab, width=40, style="Custom.TEntry")
-        self.search_book_entry.grid(row=1, column=1, pady=5, padx=10, sticky="ew")
+        self.search_book_entry.grid(row=1, column=1, pady=12, sticky="ew")
         
+        # Search button
         ttk.Button(
             tab,
             text="Search",
             style="Primary.TButton",
             command=self.search_book
-        ).grid(row=2, column=0, columnspan=2, pady=20)
+        ).grid(row=2, column=0, columnspan=2, pady=30)
         
-        # Add results treeview
-        self.search_results = ttk.Treeview(tab, columns=("Title", "Author", "ISBN", "Status"), show="headings", height=10)
-        self.search_results.grid(row=3, column=0, columnspan=2, pady=10, sticky="nsew")
+        # Results table
+        self.search_results = ttk.Treeview(
+            tab,
+            columns=("Title", "Author", "ISBN", "Status"),
+            show="headings",
+            height=10,
+            style="Treeview"
+        )
+        self.search_results.grid(row=3, column=0, columnspan=2, sticky="nsew", pady=10)
         
-        # Configure columns
+        # Configure columns with modern styling
         for col in ("Title", "Author", "ISBN", "Status"):
             self.search_results.heading(col, text=col)
-            self.search_results.column(col, width=150)
+            self.search_results.column(col, width=150, anchor="center")
         
         return tab
-# Builds the User Records tab to display details of all registered users and their borrowed books.
 
     def create_users_tab(self):
         tab = ttk.Frame(self.notebook, style="Card.TFrame", padding=20)
         
-        ttk.Label(tab, text="User Records", font=("Helvetica", 16, "bold")).grid(row=0, column=0, pady=(0, 20), sticky="w")
+        # Configure grid weights for the tab
+        tab.grid_columnconfigure(0, weight=1)
+        tab.grid_rowconfigure(1, weight=1)  # Make the treeview expandable
+        
+        ttk.Label(tab, text="User Records", font=("Helvetica", 16, "bold")).grid(
+            row=0, column=0, pady=(0, 20), sticky="w"
+        )
         
         # Add user records treeview
-        self.user_records = ttk.Treeview(tab, columns=("ID", "Name", "Books", "Status"), show="headings", height=15)
-        self.user_records.grid(row=1, column=0, pady=10, sticky="nsew")
+        self.user_records = ttk.Treeview(
+            tab, 
+            columns=("ID", "Name", "Books", "Status"), 
+            show="headings", 
+            height=10
+        )
+        self.user_records.grid(row=1, column=0, sticky="nsew", padx=5)
         
         # Configure columns
         for col in ("ID", "Name", "Books", "Status"):
             self.user_records.heading(col, text=col)
             self.user_records.column(col, width=150)
         
-        ttk.Button(
+        # Add scrollbar
+        scrollbar = ttk.Scrollbar(tab, orient="vertical", command=self.user_records.yview)
+        scrollbar.grid(row=1, column=1, sticky="ns")
+        self.user_records.configure(yscrollcommand=scrollbar.set)
+        
+        # Refresh button - ensure it's visible at the bottom
+        refresh_button = ttk.Button(
             tab,
             text="Refresh Records",
             style="Primary.TButton",
             command=self.view_user_records
-        ).grid(row=2, column=0, pady=20)
+        )
+        refresh_button.grid(row=2, column=0, pady=20, padx=5, sticky="ew")
         
         return tab
-
-    # Core functionality methods
-    # Adds a new book to the library database by inserting its details into the MongoDB books collection.
 
     def add_book(self):
         title = self.book_title_entry.get()
@@ -357,7 +444,7 @@ class LibraryManagementSystem:
 #main 
 # Entry point: Creates the main application window and starts the Tkinter event loop.
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     root = tk.Tk()
     app = LibraryManagementSystem(root)
     root.mainloop()
